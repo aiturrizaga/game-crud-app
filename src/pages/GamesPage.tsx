@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import GameList from '../components/GameList'
 import type { Game, GamePayload } from '../types/game'
-import { createGame, fetchGames, removeGame } from '../api/game.api'
+import { createGame, fetchGames, removeGame, updateGame } from '../api/game.api'
 import { GameForm } from './../components/GameForm';
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([])
     const [showForm, setShowForm] = useState(false)
+    const [selectedGame, setSelectedGame] = useState<Game | null>(null)
 
     useEffect(() => {
         fetchGames().then(res => {
@@ -20,16 +21,32 @@ export default function GamesPage() {
     }
 
     const handleNew = () => {
+        setSelectedGame(null)
+        setShowForm(true)
+    }
+
+    const handleEdit = (game: Game) => {
+        setSelectedGame(game)
         setShowForm(true)
     }
 
     const handleCancel = () => {
+        setSelectedGame(null)
         setShowForm(false)
     }
 
     const handleSubmit = async (payload: GamePayload) => {
-        const newGame = await createGame(payload)
-        setGames(prev => [...prev, newGame])
+        if (selectedGame) {
+            // Update
+            const updated = await updateGame(selectedGame.id, payload)
+            setGames(prev => prev.map(g => g.id === updated.id ? updated : g))
+        } else {
+            // Create
+            const newGame = await createGame(payload)
+            setGames(prev => [...prev, newGame])
+        }
+        
+        setSelectedGame(null)
         setShowForm(false)
     }
 
@@ -52,7 +69,8 @@ export default function GamesPage() {
             {/* Form */}
             {
                 showForm && (
-                    <GameForm 
+                    <GameForm
+                        initialData={selectedGame}
                         onCancel={handleCancel}
                         onSubmit={handleSubmit}
                     />
@@ -63,6 +81,7 @@ export default function GamesPage() {
             <GameList
                 games={games}
                 onDelete={handleDelete}
+                onEdit={handleEdit}
             />
 
         </div>

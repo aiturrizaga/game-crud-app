@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import type { GamePayload } from '../types/game'
+import { useEffect, useState } from 'react'
+import type { Game, GamePayload } from '../types/game'
 
 interface Props {
+    initialData?: Game | null
     onSubmit: (payload: GamePayload) => Promise<void>
     onCancel: () => void
 }
@@ -12,9 +13,22 @@ const EMPTY_FORM: GamePayload = {
     rating: 3
 }
 
-export const GameForm = ({ onCancel, onSubmit }: Props) => {
+export const GameForm = ({ onCancel, onSubmit, initialData }: Props) => {
     const [form, setForm] = useState<GamePayload>(EMPTY_FORM)
     const [submitting, setSubmitting] = useState(false)
+    const isEditing = Boolean(initialData)
+
+    useEffect(() => {
+        if (initialData) {
+            setForm({
+                name: initialData.name,
+                genre: initialData.genre,
+                rating: initialData.rating
+            })
+        } else {
+            setForm(EMPTY_FORM)
+        }
+    }, [initialData])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -36,7 +50,7 @@ export const GameForm = ({ onCancel, onSubmit }: Props) => {
 
     return (
         <div style={styles.card}>
-            <h2 style={styles.title}>➕ Nuevo juego</h2>
+            <h2 style={styles.title}>{isEditing ? '✏️ Editar juego' : '➕ Nuevo juego'}</h2>
 
             <form onSubmit={handleSubmit} style={styles.form}>
                 <label style={styles.label}>
@@ -89,7 +103,7 @@ export const GameForm = ({ onCancel, onSubmit }: Props) => {
                         Cancelar
                     </button>
                     <button type="submit" disabled={submitting} style={styles.btnPrimary}>
-                        {submitting ? 'Guardando...' : 'Guardar'}
+                        {submitting ? 'Guardando...' : isEditing ? 'Actulizar' : 'Guardar'}
                     </button>
                 </div>
             </form>

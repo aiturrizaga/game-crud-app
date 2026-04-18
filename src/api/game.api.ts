@@ -16,8 +16,17 @@ export async function removeGame(id: number): Promise<void> {
 export async function createGame(payload: GamePayload): Promise<Game> {
     const res = await fetch(BASE_URL, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
+    })
+    return res.json()
+}
+
+export async function updateGame(id: number, payload: GamePayload): Promise<Game> {
+    const res = await fetch(`${BASE_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
     })
     return res.json()
 }
