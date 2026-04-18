@@ -56,7 +56,7 @@ export default function GamesPage() {
             {/* Header */}
             <div style={styles.header}>
                 <div>
-                    <h1 style={styles.title}>🎮 Mis videojuegos</h1>
+                    <h1 style={styles.title}>🎮 Mis Games</h1>
                     <p style={styles.subtitle}>
                         {games.length} juego{games.length !== 1 ? 's' : ''} en la lista
                     </p>
