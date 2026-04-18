@@ -4,3 +4,5 @@ export interface Game {
     genre: string;
     rating: number;
 }
+
+export type GamePayload = Omit<Game, 'id'>

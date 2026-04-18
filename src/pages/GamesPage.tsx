@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import GameList from '../components/GameList'
-import type { Game } from '../types/game'
-import { fetchGames, removeGame } from '../api/game.api'
+import type { Game, GamePayload } from '../types/game'
+import { createGame, fetchGames, removeGame } from '../api/game.api'
+import { GameForm } from './../components/GameForm';
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([])
+    const [showForm, setShowForm] = useState(false)
 
     useEffect(() => {
         fetchGames().then(res => {
@@ -15,6 +17,20 @@ export default function GamesPage() {
     const handleDelete = async (id: number) => {
         await removeGame(id)
         setGames(prev => prev.filter(g => g.id !== id))
+    }
+
+    const handleNew = () => {
+        setShowForm(true)
+    }
+
+    const handleCancel = () => {
+        setShowForm(false)
+    }
+
+    const handleSubmit = async (payload: GamePayload) => {
+        const newGame = await createGame(payload)
+        setGames(prev => [...prev, newGame])
+        setShowForm(false)
     }
 
     return (
@@ -28,10 +44,20 @@ export default function GamesPage() {
                         {games.length} juego{games.length !== 1 ? 's' : ''} en la lista
                     </p>
                 </div>
-                <button type="button" style={styles.btnAdd}>
+                <button onClick={handleNew} type="button" style={styles.btnAdd}>
                     + Agregar
                 </button>
             </div>
+
+            {/* Form */}
+            {
+                showForm && (
+                    <GameForm 
+                        onCancel={handleCancel}
+                        onSubmit={handleSubmit}
+                    />
+                )
+            }
 
             {/* List */}
             <GameList
