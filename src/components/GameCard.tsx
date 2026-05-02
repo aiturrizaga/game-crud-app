@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import type { Game } from '../types/game';
 
 interface Props {
@@ -41,7 +42,9 @@ export default function GameCard({ game, onDelete }: Props) {
 
             {/* Detail */}
             <div style={styles.info}>
-                <p style={styles.name}>{game.name}</p>
+                <Link to={`/games/${game.id}`} style={styles.name}>
+                    {game.name}
+                </Link>
                 <p style={styles.meta}>
                     Acción &nbsp;·&nbsp;
                     <RatingStars rating={game.rating} /> {game.rating}/10
@@ -85,7 +88,7 @@ const styles: Record<string, React.CSSProperties> = {
         flexShrink: 0,
     },
     info: { flex: 1 },
-    name: { fontWeight: 600, fontSize: 14, margin: 0 },
+    name: { fontWeight: 600, fontSize: 14, margin: 0, textDecoration: 'none', color: '#111827' },
     meta: { fontSize: 12, color: '#6b7280', margin: '2px 0 0' },
     actions: { display: 'flex', gap: 6 },
     btnEdit: {

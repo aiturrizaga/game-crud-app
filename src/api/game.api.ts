@@ -7,6 +7,12 @@ export async function fetchGames(): Promise<Game[]> {
     return res.json()
 }
 
+export async function fetchGameById(id: number): Promise<Game> {
+    const res = await fetch(`${BASE_URL}/${id}`)
+    if (!res.ok) throw new Error(`El juego con ID: ${id} no existe`)
+    return res.json()
+}
+
 export async function removeGame(id: number): Promise<void> {
     await fetch(`${BASE_URL}/${id}`, {
         method: 'DELETE'
