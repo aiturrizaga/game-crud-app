@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import GameList from '../components/GameList'
 import type { Game } from '../types/game'
 import { fetchGames, removeGame } from '../api/game.api'
+import { Link } from 'react-router-dom'
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([])
@@ -28,9 +29,9 @@ export default function GamesPage() {
                         {games.length} juego{games.length !== 1 ? 's' : ''} en la lista
                     </p>
                 </div>
-                <button type="button" style={styles.btnAdd}>
+                <Link to="/games/new" style={styles.btnAdd}>
                     + Agregar
-                </button>
+                </Link>
             </div>
 
             {/* List */}
@@ -67,6 +68,7 @@ const styles: Record<string, React.CSSProperties> = {
         cursor: 'pointer',
         fontWeight: 500,
         fontSize: 14,
+        textDecoration: 'none',
     },
     error: {
         padding: '10px 14px',
