@@ -3,7 +3,6 @@ import type { Game } from '../types/game';
 interface Props {
     game: Game;
     onDelete: (id: number) => void
-    onEdit: (game: Game) => void
 }
 
 const GENRE_EMOJI: Record<string, string> = {
@@ -26,7 +25,7 @@ function RatingStars({ rating }: { rating: number }) {
     )
 }
 
-export default function GameCard({ game, onDelete, onEdit }: Props) {
+export default function GameCard({ game, onDelete }: Props) {
     const emoji = GENRE_EMOJI[game.genre] ?? '🎮';
 
     const handleDelete = () => {
@@ -51,7 +50,7 @@ export default function GameCard({ game, onDelete, onEdit }: Props) {
 
             {/* Actions */}
             <div style={styles.actions}>
-                <button onClick={() => onEdit(game)} type="button" style={styles.btnEdit}>
+                <button type="button" style={styles.btnEdit}>
                     editar
                 </button>
                 <button onClick={handleDelete} style={styles.btnDelete}>

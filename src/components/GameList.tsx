@@ -4,10 +4,9 @@ import GameCard from './GameCard';
 interface Props {
     games: Game[],
     onDelete: (id: number) => void,
-    onEdit: (game: Game) => void
 }
 
-export default function GameList({ games, onDelete, onEdit }: Props) {
+export default function GameList({ games, onDelete }: Props) {
 
     if (games.length === 0) {
         return (
@@ -25,7 +24,6 @@ export default function GameList({ games, onDelete, onEdit }: Props) {
                     <GameCard
                         key={game.id}
                         game={game}
-                        onEdit={onEdit}
                         onDelete={onDelete}
                     />
                 ))

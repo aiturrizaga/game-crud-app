@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import GameList from '../components/GameList'
-import type { Game, GamePayload } from '../types/game'
-import { createGame, fetchGames, removeGame, updateGame } from '../api/game.api'
-import { GameForm } from './../components/GameForm';
+import type { Game } from '../types/game'
+import { fetchGames, removeGame } from '../api/game.api'
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([])
-    const [showForm, setShowForm] = useState(false)
-    const [selectedGame, setSelectedGame] = useState<Game | null>(null)
 
     useEffect(() => {
         fetchGames().then(res => {
@@ -18,36 +15,6 @@ export default function GamesPage() {
     const handleDelete = async (id: number) => {
         await removeGame(id)
         setGames(prev => prev.filter(g => g.id !== id))
-    }
-
-    const handleNew = () => {
-        setSelectedGame(null)
-        setShowForm(true)
-    }
-
-    const handleEdit = (game: Game) => {
-        setSelectedGame(game)
-        setShowForm(true)
-    }
-
-    const handleCancel = () => {
-        setSelectedGame(null)
-        setShowForm(false)
-    }
-
-    const handleSubmit = async (payload: GamePayload) => {
-        if (selectedGame) {
-            // Update
-            const updated = await updateGame(selectedGame.id, payload)
-            setGames(prev => prev.map(g => g.id === updated.id ? updated : g))
-        } else {
-            // Create
-            const newGame = await createGame(payload)
-            setGames(prev => [...prev, newGame])
-        }
-        
-        setSelectedGame(null)
-        setShowForm(false)
     }
 
     return (
@@ -61,27 +28,15 @@ export default function GamesPage() {
                         {games.length} juego{games.length !== 1 ? 's' : ''} en la lista
                     </p>
                 </div>
-                <button onClick={handleNew} type="button" style={styles.btnAdd}>
+                <button type="button" style={styles.btnAdd}>
                     + Agregar
                 </button>
             </div>
-
-            {/* Form */}
-            {
-                showForm && (
-                    <GameForm
-                        initialData={selectedGame}
-                        onCancel={handleCancel}
-                        onSubmit={handleSubmit}
-                    />
-                )
-            }
 
             {/* List */}
             <GameList
                 games={games}
                 onDelete={handleDelete}
-                onEdit={handleEdit}
             />
 
         </div>
